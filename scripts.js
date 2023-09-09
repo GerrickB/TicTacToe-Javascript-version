@@ -10,7 +10,7 @@ const gameBoard = (() => {
     [0, 4, 8], [2, 4, 6]
   ];
   // maybe use for validation, remove used numbers
-  // let choices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  let choices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
   for (let i = 0; i < rows; i++) {
     board[i] = [];
@@ -22,7 +22,7 @@ const gameBoard = (() => {
 
   const getBoard = () => board;
 
-  return { getBoard };
+  return { choices, getBoard };
 })();
 
 const displayController = (() => {
@@ -41,5 +41,27 @@ const displayController = (() => {
     })
   }
 
+  function clickHandlerBoard(e) {
+    const selectedTile = e.target.id;
+    console.log(selectedTile);
+    
+    const cellButton = document.querySelector(`#${selectedTile}`);
+    const imgX = document.createElement("img")
+    imgX.src = 'icons/close_FILL0_wght400_GRAD0_opsz24.svg'
+    imgX.alt = 'X'
+    //console.log(`selected cellButton on ${cellButton.id}`)
+    cellButton.appendChild(imgX);
+
+    let arr = selectedTile.split('-');
+    console.log(arr[1]);
+    // use num to remove choices
+    console.log(parseInt(arr[1]));
+    //gameBoard.choices.pop();
+    //console.log(gameBoard.choices)
+  }
+  gameboardDiv.addEventListener("click", clickHandlerBoard);
+
   updateDisplay();
 })();
+
+// Try to split 'position-1' then extract number then parse it
