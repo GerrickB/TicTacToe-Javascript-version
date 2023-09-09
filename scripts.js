@@ -2,7 +2,7 @@ const gameBoard = (() => {
   const rows = 3;
   const columns = 3;
   const board = [];
-  let cell = 0;
+  let tile = 0;
 
   const WIN_COMBO = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -15,8 +15,31 @@ const gameBoard = (() => {
   for (let i = 0; i < rows; i++) {
     board[i] = [];
     for (let j = 0; j < columns; j++) {
-      board[i].push(cell);
-      cell++;
+      board[i].push(tile);
+      tile++;
     }
   }
-})()
+
+  const getBoard = () => board;
+
+  return { getBoard };
+})();
+
+const displayController = (() => {
+  const gameboardDiv = document.querySelector('.gameboard');
+
+  const updateDisplay = () => {
+    gameBoard.getBoard().forEach(row => {
+      row.forEach((value, index) => {
+        const cellButton = document.createElement("button");
+        cellButton.classList.add("tile");
+        cellButton.id = `position-${value}`;
+
+        gameboardDiv.appendChild(cellButton);
+
+      })
+    })
+  }
+
+  updateDisplay();
+})();
