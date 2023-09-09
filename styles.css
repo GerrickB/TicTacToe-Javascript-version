@@ -10,44 +10,51 @@
 
 .tile {
   height: 100px;
+  border: none;
+  cursor: pointer;
+}
+
+.tile img {
+  height: 100%;
+  width: 100%;
+}
+
+#position-0 {
+  border-right: 5px solid black;
+  border-bottom: 5px solid black;
 }
 
 #position-1 {
-  border-right: 5px solid black;
   border-bottom: 5px solid black;
 }
 
 #position-2 {
+  border-left: 5px solid black;
   border-bottom: 5px solid black;
 }
 
 #position-3 {
-  border-left: 5px solid black;
+  border-right: 5px solid black;
   border-bottom: 5px solid black;
 }
 
 #position-4 {
-  border-right: 5px solid black;
   border-bottom: 5px solid black;
 }
 
 #position-5 {
-  border-bottom: 5px solid black;
-}
-
-#position-6 {
   border-left: 5px solid black;
   border-bottom: 5px solid black;
 }
 
-#position-7 {
+#position-6 {
   border-right: 5px solid black;
 }
 
-#position-8 {
+#position-7 {
   
 }
 
-#position-9 {
+#position-8 {
   border-left: 5px solid black;
 }
