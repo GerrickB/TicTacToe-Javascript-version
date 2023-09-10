@@ -10,8 +10,6 @@ const gameBoard = (() => {
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
   ];
-  // maybe use for validation, remove used numbers
-  let choices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
   for (let i = 0; i < rows; i++) {
     board[i] = [];
@@ -21,13 +19,11 @@ const gameBoard = (() => {
     }
   }
 
+  const getWinCombo = () => WIN_COMBO;
   const getBoard = () => board;
 
   const putMark = (tile, mark) => {
     console.log(`#${tile}`)
-    // returns null if no class or id found
-    // if (null) is a false condition
-    //console.log(document.querySelector('.something'));
     const cellButton = document.querySelector(`#${tile}`);
 
     if (cellButton.disabled === false) {
@@ -49,16 +45,9 @@ const gameBoard = (() => {
     } else {
       console.log(`${tile} is already marked`)
     }
-    
-    // let arr = tile.split('-');
-    // console.log(arr[1]);
-    // // use num to remove choices
-    // console.log(parseInt(arr[1]));
-    // gameBoard.choices.pop();
-    // console.log(gameBoard.choices)
   };
 
-  return { choices, getBoard, putMark };
+  return { getBoard, getWinCombo, putMark };
 })();
 
 // factory function
@@ -66,11 +55,13 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
   const players = [
     {
       name: playerOneName,
-      mark: 'x'
+      mark: 'x',
+      choices: []
     },
     {
       name: playerTwoName,
-      mark: 'o'
+      mark: 'o',
+      choices: []
     }
   ];
 
@@ -87,10 +78,32 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
 
   const getActivePlayer = () => activePlayer;
 
+  const checkWinner = (playerChoices) => {
+    for (let i = 0; i < gameBoard.getWinCombo().length; i++) {
+      let winCombo = gameBoard.getWinCombo()[i];
+      if (winCombo.every(elem => playerChoices.includes(elem))) {
+          return true;
+      }
+    }
+    return false;
+  }
+
   const playRound = (tile) => {
     gameBoard.putMark(tile, getActivePlayer().mark);
+    let markedTile = parseInt(tile.split('-')[1]);
+    getActivePlayer().choices.push(markedTile);
+    console.log(getActivePlayer().choices)
 
-    switchPlayerTurn();
+    if (checkWinner(getActivePlayer().choices)) {
+      const gameboardDiv = document.querySelector('.gameboard')
+      const buttons = gameboardDiv.querySelectorAll('button');
+      const winnerDiv = document.querySelector('.winner')
+      buttons.forEach(button => button.disabled = true);
+      winnerDiv.textContent = `${getActivePlayer().name} has won!`;
+    } else {
+      switchPlayerTurn();
+    }
+    
   };
 
   return {
@@ -111,7 +124,7 @@ const displayController = (() => {
     playerTurnDiv.textContent = `${game.getActivePlayer().name}'s turn`;
     
     gameBoard.getBoard().forEach(row => {
-      row.forEach((value, index) => {
+      row.forEach((value) => {
         const cellButton = document.createElement("button");
         cellButton.classList.add("tile");
         cellButton.id = `position-${value}`;
@@ -123,11 +136,13 @@ const displayController = (() => {
   }
 
   function clickHandlerBoard(e) {
-    const selectedTile = e.target.id;
+    //const selectedTile = e.target.id;
 
-    game.playRound(selectedTile);
-    //updateDisplay();
-    playerTurnDiv.textContent = `${game.getActivePlayer().name}'s turn`;
+    if(e.target.classList.contains("tile")) {
+      const selectedTile = e.target.id;
+      game.playRound(selectedTile);
+      playerTurnDiv.textContent = `${game.getActivePlayer().name}'s turn`;
+    }
   }
   gameboardDiv.addEventListener("click", clickHandlerBoard);
 
@@ -135,6 +150,11 @@ const displayController = (() => {
 
 })();
 
+// random notes
 
 // dont need since it's a module
 //displayController();
+
+// returns null if no class or id found
+// if (null) is a false condition
+//console.log(document.querySelector('.something'));
